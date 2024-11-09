@@ -4,6 +4,58 @@ import os
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+# Week 11 Assignment: OO-styled data processing code
+
+cities = []
+with open(os.path.join(__location__, 'Cities.csv')) as f:
+    rows = csv.DictReader(f)
+    for r in rows:
+        cities.append(dict(r))
+
+countries = []
+with open(os.path.join(__location__, 'Countries.csv')) as f:
+    rows = csv.DictReader(f)
+    for r in rows:
+        countries.append(dict(r))
+
+class TableDB:
+    def __init__(self):
+        self.table_database = []
+
+    def insert(self, table):
+        for row in table:
+            self.table_database.append(row)
+
+    def search(self, table_name):
+        searched = []
+        for row in self.table_database:
+            if table_name in row.keys():
+                searched.append(row)
+        return searched
+
+
+class Table:
+    def __init__(self, table_name, table):
+        self.table = table[table_name]
+
+    def filter(self, condition):
+        filtered_list = []
+        for item in self.table:
+            if condition(item):
+                filtered_list.append(item)
+        return filtered_list
+
+    def aggregate(self, aggregation_key, aggregation_function):
+        value = []
+        for item in self.table:
+            value.append(item[aggregation_key])
+        return aggregation_function(value)
+
+    def __str__(self):
+        return str(self.table)
+
+# Lab Week 11
+
 '''cities = []
 with open(os.path.join(__location__, 'Cities.csv')) as f:
     rows = csv.DictReader(f)
@@ -17,7 +69,7 @@ with open(os.path.join(__location__, 'Countries.csv')) as f:
         countries.append(dict(r))'''
 
 
-class DataBase:
+'''class DataBase:
     def __init__(self, file_name):
         self.table = []
         with open(os.path.join(__location__, file_name)) as f:
@@ -106,7 +158,7 @@ city_processor = TableProcessing(city_table)
 min_latitude = city_processor.minInfo(option='latitude')
 max_latitude = city_processor.maxInfo(option='latitude')
 
-print(min_latitude, max_latitude)
+print(min_latitude, max_latitude)'''
 
 '''# Print the average temperature of all the cities
 print("The average temperature of all the cities:")
