@@ -1,9 +1,10 @@
-import csv, os
+import csv
+import os
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-cities = []
+'''cities = []
 with open(os.path.join(__location__, 'Cities.csv')) as f:
     rows = csv.DictReader(f)
     for r in rows:
@@ -13,9 +14,73 @@ countries = []
 with open(os.path.join(__location__, 'Countries.csv')) as f:
     rows = csv.DictReader(f)
     for r in rows:
-        countries.append(dict(r))
+        countries.append(dict(r))'''
 
-# Print the average temperature of all the cities
+
+class DataBase:
+    def __init__(self, file_name):
+        self.table = []
+        with open(os.path.join(__location__, file_name)) as f:
+            rows = csv.DictReader(f)
+            for r in rows:
+                self.table.append(dict(r))
+
+    def load_table(self):
+        return self.table
+
+
+class TableProcessing:
+    def __init__(self, table):
+        self.table = table
+
+    def filter(self, condition):
+        filtered_list = []
+        for item in self.table:
+            if condition(item):
+                filtered_list.append(item)
+        return filtered_list
+
+    def aggregate(self, aggregation_key, aggregation_function):
+        value = []
+        for item in self.table:
+            value.append(item[aggregation_key])
+        return aggregation_function(value)
+
+    def average_temp(self, country: str = None):
+        temp = []
+        if country == None:
+            for item in self.table:
+                temp.append(float(item["temperature"]))
+        else:
+            temp = []
+            for item in self.table:
+                if item["country"] == country:
+                    temp.append(float(item["temperature"]))
+        return sum(temp) / len(temp)
+
+    def all_city(self, country : str = None):
+        city = []
+        if country == None:
+            for item in self.table:
+                city.append(item["city"])
+        else:
+            for item in self.table:
+                if item["country"] == country:
+                    city.append(item["city"])
+        return city
+
+    def max_temp(self, country:str = None):
+        temp = []
+        if country == None:
+            for item in self.table:
+                temp.append(float(item["temperature"]))
+        else:
+            for item in self.table:
+                if item["country"] == country:
+                    temp.append(float(item["temperature"]))
+        return max(temp)
+
+'''# Print the average temperature of all the cities
 print("The average temperature of all the cities:")
 italy_temps = []
 for city in cities:
@@ -73,7 +138,7 @@ def aggregate(aggregation_key, aggregation_function, dict_list):
     value = []
     for item in dict_list:
         value.append(item[aggregation_key])
-    return aggregation_function(value)
+    return aggregation_function(value)'''
 # Let's write code to
 # - print the average temperature for all the cities in Italy
 # - print the average temperature for all the cities in Sweden
