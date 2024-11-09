@@ -31,7 +31,7 @@ class DataBase:
 
 class TableProcessing:
     def __init__(self, table):
-        self.table = table
+        self.table = list(table)
 
     def filter(self, condition):
         filtered_list = []
@@ -69,16 +69,44 @@ class TableProcessing:
                     city.append(item["city"])
         return city
 
-    def max_temp(self, country:str = None):
+    def maxInfo(self, country:str = None, option:str = None):
+        if option == None:
+            raise ValueError("Please enter an option")
         temp = []
         if country == None:
             for item in self.table:
-                temp.append(float(item["temperature"]))
+                temp.append(float(item[option]))
         else:
             for item in self.table:
                 if item["country"] == country:
-                    temp.append(float(item["temperature"]))
+                    temp.append(float(item[option]))
         return max(temp)
+
+    def minInfo(self, country:str = None, option:str = None):
+        if option == None:
+            raise ValueError("Please enter an option")
+        temp = []
+        if country == None:
+            for item in self.table:
+                temp.append(float(item[option]))
+        else:
+            for item in self.table:
+                if item["country"] == country:
+                    temp.append(float(item[option]))
+        return min(temp)
+
+city = DataBase('Cities.csv')
+countries = DataBase('Countries.csv')
+
+city_table = city.load_table()
+countries_table = countries.load_table()
+
+city_processor = TableProcessing(city_table)
+
+min_latitude = city_processor.minInfo(option='latitude')
+max_latitude = city_processor.maxInfo(option='latitude')
+
+print(min_latitude, max_latitude)
 
 '''# Print the average temperature of all the cities
 print("The average temperature of all the cities:")
